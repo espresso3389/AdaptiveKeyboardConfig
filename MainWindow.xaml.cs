@@ -30,12 +30,15 @@ namespace AdaptiveKeyboardConfig
     {
         public MainWindow()
         {
+            /*
+            PresentationTraceSources.DataBindingSource.Listeners.Add(new ConsoleTraceListener());
+            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
+            */
+
             Apps = new ObservableCollection<AppEntry>();
-            InitializeComponent();
             this.DataContext = this;
 
-            winGrabber = new WinGrabber();
-            winGrabber.Show();
+            InitializeComponent();
 
             RemoveApp = new DelegateCommand<string>(
                 async p =>
@@ -65,9 +68,13 @@ namespace AdaptiveKeyboardConfig
                 p => appList.SelectedIndex >= 0);
 
             appList.SelectionChanged += (s, e) => RemoveApp.RaiseCanExecuteChanged();
+
             findTargetWindowButton.PreviewMouseLeftButtonDown += findTargetWindowButton_MouseLeftButtonDown;
             findTargetWindowButton.PreviewMouseMove += findTargetWindowButton_MouseMove;
             findTargetWindowButton.PreviewMouseLeftButtonUp += findTargetWindowButton_MouseLeftButtonUp;
+
+            winGrabber = new WinGrabber();
+            winGrabber.Show();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -78,16 +85,11 @@ namespace AdaptiveKeyboardConfig
 
         void addApp(AppEntry app)
         {
-            if (app == null)
+            if (app == null || Apps.FirstOrDefault(a => a.Path == app.Path) != null)
                 return;
 
-            if (Apps.FirstOrDefault(a => a.Path == app.Path) != null)
-                return;
-
-            var idx = 0; // appList.SelectedIndex;
-            if (idx < 0) idx = 0;
-            Apps.Insert(idx, app);
-            appList.ScrollIntoView(Apps[idx + 1 < Apps.Count ? idx + 1 : idx]);
+            Apps.Insert(0, app);
+            appList.ScrollIntoView(app);
         }
 
         AppEntry getAppFromCursorPos(out RECT bounds)

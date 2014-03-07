@@ -15,19 +15,9 @@
         <Geometry x:Key="WebBrowser">F1M32,18L30,18 29,14 28,18 26,18 24,10 26,10 27,14 28,10 30,10 31,14 32,10 34,10z M18,26.009C13.556,26.009,9.685,23.589,7.608,20L28.392,20C26.315,23.589,22.444,26.009,18,26.009 M6,18L4,18 2,10 4,10 4.906,14 6,10 8,10 8.875,14 10,10 12,10 10,18 8,18 7,14z M23,10L21,18 19,18 18,14 17,18 15,18 13,10 15,10 16,14 17,10 19,10 20,14 21,10z M18,1.991C22.444,1.991,26.315,4.412,28.392,8L7.608,8C9.685,4.412,13.556,1.991,18,1.991 M30.635,8C28.387,3.274 23.582,0 18,0 12.418,0 7.614,3.274 5.365,8L0,8 0,20 5.365,20C7.614,24.726 12.418,28 18,28 23.582,28 28.387,24.726 30.635,20L36,20 36,8z</Geometry>
         <Geometry x:Key="WebConference">F1M36,36L36,31 28,36z M26.048,15.01C25.498,15.01 25.053,14.109 25.053,12.999 25.053,11.889 25.498,10.988 26.048,10.988 26.598,10.988 27.043,11.889 27.043,12.999 27.043,14.109 26.598,15.01 26.048,15.01 M36,12L36,1C27.652,1 24.426,1.444 23,10 22,16 19.432,16.646 21,17.511 21.719,17.906 22.967,18 22.967,18L22.967,20 25.955,20.333C25.955,20.333 25.437,21.625 23.437,22.187 24.094,24.781 24.902,27 26,27L30,27C30,27 30.246,29.213 29,31 27.963,32.487 25.725,33.275 23,36L26,36 36,29 36,22.329C35.833,22.729 35.519,23 35,23 33,23 34,19 35,19 35.396,19 35.791,19.633 36,20.393L36,14C36,14 30,13 28,7 26,1 31,12 36,12 M9.991,14.01C9.44,14.01 8.993,13.109 8.993,11.999 8.993,10.889 9.44,9.988 9.991,9.988 10.542,9.988 10.99,10.889 10.99,11.999 10.99,13.109 10.542,14.01 9.991,14.01 M0,0L0,26.223 8,28 11,28C12.861,28 13,23.883 13,22 11.139,22 10,20.5 10,20.5L13,20 13,18 15.333,18C17.13,18 15.27,16 13.031,8.471 10.557,0.154 8.377,0 0,0 M0,28.171L0,36 10.187,36C5.425,30.217,1.694,28.608,0,28.171 M8.134,28.812L7,31 10,32 10.8,36 15,36C13.542,33.085,9.97,30.179,8.134,28.812</Geometry>
         
-        <DrawingImage x:Key="icon">
-            <DrawingImage.Drawing>
-                <DrawingGroup>
-                    <DrawingGroup.Children>
-                        <GeometryDrawing Brush="Black" Geometry="{StaticResource Function}"/>
-                    </DrawingGroup.Children>
-                </DrawingGroup>
-            </DrawingImage.Drawing>
-        </DrawingImage>
-
         <DataTemplate x:Key="ListBoxItemTemplate" DataType="{x:Type local:AppEntry}">
             <StackPanel Orientation="Horizontal">
-                <Button Margin="5 2 5 2" Click="modeSwitchButtonClick">
+                <Button Margin="5 2 5 2" Click="modeSwitchButtonClick" ToolTip="{Binding Mode}">
                     <StackPanel Orientation="Horizontal">
                         <Viewbox Height="24" Width="24"  VerticalAlignment="Center" Margin="0 0 5 0">
                             <Path Fill="{Binding ElementName=ModeShown, Path=Foreground}">
@@ -69,7 +59,9 @@
                             </Style>
                         </Image.Style>
                     </Image>
-                    <TextBlock Text="{Binding DisplayName}" FontFamily="Segoe UI" FontSize="15" Margin="5 0 15 0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding DisplayName}"
+                               ToolTip="{Binding Path}"
+                               FontFamily="Segoe UI" FontSize="15" Margin="5 0 15 0" VerticalAlignment="Center"/>
                 </StackPanel>
         </DataTemplate>
     </Window.Resources>
@@ -94,7 +86,7 @@
                             <Style.Triggers>
                                 <!-- Set + cursor during searching apps -->
                                 <Trigger Property="IsMouseCaptured"  Value="True">
-                                    <Setter Property="Cursor" Value="Cross" />
+                                    <Setter Property="Cursor" Value="Hand" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
