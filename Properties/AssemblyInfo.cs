@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AdaptiveKeyboardConfig")]
+[assembly: AssemblyProduct("Adaptive Keyboard Configuration Utility")]
 [assembly: AssemblyCopyright("Copyright © 2014 espresso3389@gmail.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
