@@ -1,0 +1,157 @@
+﻿<controls:MetroWindow x:Class="AdaptiveKeyboardConfig.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+                      xmlns:local="clr-namespace:AdaptiveKeyboardConfig"
+                      Title="Adaptive Keyboard Configuration"
+                      Height="456" Width="651" BorderBrush="Black" BorderThickness="1"
+                      Icon="Resources/f1.ico" SaveWindowPosition="True">
+    <Window.Resources>
+        <Geometry x:Key="RemoveButton">F1M29,21L7,21 7,15 29,15z M18,0C8.059,0 0,8.059 0,18 0,27.941 8.059,36 18,36 27.941,36 36,27.941 36,18 36,8.059 27.941,0 18,0</Geometry>
+        <Geometry x:Key="TargetButton">F1M25.717,16.615C25.142,13.393,22.606,10.852,19.385,10.277L19.385,6.547C24.651,7.178,28.823,11.348,29.454,16.615z M19.385,29.452L19.385,25.722C22.606,25.148,25.142,22.607,25.717,19.385L29.454,19.385C28.823,24.651,24.651,28.821,19.385,29.452 M18,23.077C15.196,23.077 12.923,20.803 12.923,18 12.923,15.196 15.196,12.923 18,12.923 20.804,12.923 23.077,15.196 23.077,18 23.077,20.803 20.804,23.077 18,23.077 M16.615,29.452C11.35,28.821,7.177,24.651,6.546,19.385L10.283,19.385C10.859,22.607,13.394,25.148,16.615,25.722z M16.615,6.547L16.615,10.277C13.394,10.852,10.859,13.393,10.283,16.615L6.546,16.615C7.177,11.348,11.35,7.178,16.615,6.547 M34.2,16.615L32.238,16.615C31.585,9.819,26.181,4.411,19.385,3.759L19.385,1.8C19.385,0.805 18.765,0 18,0 17.236,0 16.615,0.805 16.615,1.8L16.615,3.759C9.82,4.411,4.415,9.819,3.762,16.615L1.8,16.615C0.806,16.615 0,17.235 0,18 0,18.764 0.806,19.385 1.8,19.385L3.762,19.385C4.415,26.18,9.82,31.588,16.615,32.241L16.615,34.2C16.615,35.194 17.236,36 18,36 18.765,36 19.385,35.194 19.385,34.2L19.385,32.241C26.181,31.588,31.585,26.18,32.238,19.385L34.2,19.385C35.195,19.385 36,18.764 36,18 36,17.235 35.195,16.615 34.2,16.615</Geometry>
+
+        <Geometry x:Key="Function">M13.208,20.844208 L37.973615,20.844208 L37.973615,25.427512 L18.364247,25.427512 L18.364247,36.36494 L35.213198,36.36494 L35.213198,40.948247 L18.364247,40.948247 L18.364247,59.620001 L13.208,59.620001 z M54.925882,20.714001 L58.962336,20.714001 L58.962336,55.661692 L66.879,55.661692 L66.879,59.620001 L45.889426,59.620001 L45.889426,55.661692 L53.962338,55.661692 L53.962338,29.672276 L45.889426,29.672276 L45.889426,26.130633 C46.983175,26.130633 48.155049,26.039489 49.405049,25.857196 C50.655048,25.674907 51.601228,25.410152 52.243589,25.06293 C53.042201,24.628906 53.671541,24.077693 54.131612,23.409294 C54.591678,22.740894 54.856435,21.842464 54.925882,20.714001 z M1.8310547E-07,7.019043E-07 L81,7.019043E-07 L81,81.000001 L1.8310547E-07,81.000001 z</Geometry>
+        <Geometry x:Key="Home">F1M4,15.188L4,30.002 14,30.002 14,19.85C14,17.724 15.791,16.002 18,16.002 20.209,16.002 22,17.724 22,19.85L22,30.002 32,30.002 32,15.188 18,7.438z M18,2.001L0,12 0,16.002 18,6 36,16.002 36,12z M32,0L26,0 26,4.98 32,8.314z</Geometry>
+        <Geometry x:Key="WebBrowser">F1M32,18L30,18 29,14 28,18 26,18 24,10 26,10 27,14 28,10 30,10 31,14 32,10 34,10z M18,26.009C13.556,26.009,9.685,23.589,7.608,20L28.392,20C26.315,23.589,22.444,26.009,18,26.009 M6,18L4,18 2,10 4,10 4.906,14 6,10 8,10 8.875,14 10,10 12,10 10,18 8,18 7,14z M23,10L21,18 19,18 18,14 17,18 15,18 13,10 15,10 16,14 17,10 19,10 20,14 21,10z M18,1.991C22.444,1.991,26.315,4.412,28.392,8L7.608,8C9.685,4.412,13.556,1.991,18,1.991 M30.635,8C28.387,3.274 23.582,0 18,0 12.418,0 7.614,3.274 5.365,8L0,8 0,20 5.365,20C7.614,24.726 12.418,28 18,28 23.582,28 28.387,24.726 30.635,20L36,20 36,8z</Geometry>
+        <Geometry x:Key="WebConference">F1M36,36L36,31 28,36z M26.048,15.01C25.498,15.01 25.053,14.109 25.053,12.999 25.053,11.889 25.498,10.988 26.048,10.988 26.598,10.988 27.043,11.889 27.043,12.999 27.043,14.109 26.598,15.01 26.048,15.01 M36,12L36,1C27.652,1 24.426,1.444 23,10 22,16 19.432,16.646 21,17.511 21.719,17.906 22.967,18 22.967,18L22.967,20 25.955,20.333C25.955,20.333 25.437,21.625 23.437,22.187 24.094,24.781 24.902,27 26,27L30,27C30,27 30.246,29.213 29,31 27.963,32.487 25.725,33.275 23,36L26,36 36,29 36,22.329C35.833,22.729 35.519,23 35,23 33,23 34,19 35,19 35.396,19 35.791,19.633 36,20.393L36,14C36,14 30,13 28,7 26,1 31,12 36,12 M9.991,14.01C9.44,14.01 8.993,13.109 8.993,11.999 8.993,10.889 9.44,9.988 9.991,9.988 10.542,9.988 10.99,10.889 10.99,11.999 10.99,13.109 10.542,14.01 9.991,14.01 M0,0L0,26.223 8,28 11,28C12.861,28 13,23.883 13,22 11.139,22 10,20.5 10,20.5L13,20 13,18 15.333,18C17.13,18 15.27,16 13.031,8.471 10.557,0.154 8.377,0 0,0 M0,28.171L0,36 10.187,36C5.425,30.217,1.694,28.608,0,28.171 M8.134,28.812L7,31 10,32 10.8,36 15,36C13.542,33.085,9.97,30.179,8.134,28.812</Geometry>
+        
+        <DrawingImage x:Key="icon">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <DrawingGroup.Children>
+                        <GeometryDrawing Brush="Black" Geometry="{StaticResource Function}"/>
+                    </DrawingGroup.Children>
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <DataTemplate x:Key="ListBoxItemTemplate" DataType="{x:Type local:AppEntry}">
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="5 2 5 2" Click="modeSwitchButtonClick">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Height="24" Width="24"  VerticalAlignment="Center" Margin="0 0 5 0">
+                            <Path Fill="{Binding ElementName=ModeShown, Path=Foreground}">
+                                <Path.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Mode}" Value="Function">
+                                                <Setter Property="Path.Data" Value="{StaticResource Function}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Mode}" Value="Home">
+                                                <Setter Property="Path.Data" Value="{StaticResource Home}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Mode}" Value="WebBrowser">
+                                                <Setter Property="Path.Data" Value="{StaticResource WebBrowser}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Mode}" Value="WebConference">
+                                                <Setter Property="Path.Data" Value="{StaticResource WebConference}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Path.Style>
+                            </Path>
+                        </Viewbox>
+                        <TextBlock Name="ModeShown" Text="{Binding Mode}" FontFamily="Segoe UI" FontSize="15" Margin="5 0 0 0" Width="100" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Image Width="32" Height="32" Name="appIcon"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       Source="{Binding Icon}">
+                        <Image.Style>
+                            <Style>
+                                <Setter Property="Image.Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+                                        <Setter Property="Image.Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <TextBlock Text="{Binding DisplayName}" FontFamily="Segoe UI" FontSize="15" Margin="5 0 15 0" VerticalAlignment="Center"/>
+                </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="10,5,10,10" Height="42">
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="0 0 5 0" Padding="5 5 5 5" Name="findTargetWindowButton" Focusable="False"
+                        ToolTip="Start dragging to the app window to add.">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Margin="0 0 5 0">
+                            <Canvas Height="36" Canvas.Left="2" Canvas.Top="2" Width="36">
+                                <Path Height="36" Width="36"
+                                      Data="{StaticResource TargetButton}"
+                                      Fill="{Binding ElementName=AccText, Path=Foreground}"/>
+                            </Canvas>
+                        </Viewbox>
+                        <AccessText Text="Find App" FontFamily="Segoe UI Light" FontSize="20" Name="AccText"/>
+                    </StackPanel>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                            <!-- Need BaseOn to inherit Elysium Style -->
+                            <Style.Triggers>
+                                <!-- Set + cursor during searching apps -->
+                                <Trigger Property="IsMouseCaptured"  Value="True">
+                                    <Setter Property="Cursor" Value="Cross" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Margin="0 0 5 0" Padding="5 5 5 5" Command="{Binding RemoveApp}"
+                        ToolTip="Remove selected apps.">
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Margin="0 0 5 0">
+                            <Canvas Height="36" Canvas.Left="2" Canvas.Top="2" Width="36">
+                                <Path Height="36" Canvas.Left="0" Canvas.Top="0" Width="36"
+                                      Data="{StaticResource RemoveButton}"
+                                      Fill="{Binding ElementName=AccText, Path=Foreground}"/>
+                            </Canvas>
+                        </Viewbox>
+                        <AccessText Text="_Remove App" FontFamily="Segoe UI Light" FontSize="20"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </DockPanel>
+        <ListBox Name="appList" SelectionMode="Extended"
+                 ItemsSource="{Binding Apps}"
+                 ItemTemplate="{DynamicResource ListBoxItemTemplate}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <ScaleTransform x:Name="transform" />
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:.4" />
+                                        <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleY" From="0" Duration="0:0:.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                        <DataTrigger Binding="{Binding IsBeingRemoved}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:.2"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleY" From="1" To="0" Duration="0:0:.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+    </DockPanel>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding RemoveApp}" Key="Delete" />
+    </Window.InputBindings>
+</controls:MetroWindow>
