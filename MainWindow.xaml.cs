@@ -30,11 +30,6 @@ namespace AdaptiveKeyboardConfig
     {
         public MainWindow()
         {
-            /*
-            PresentationTraceSources.DataBindingSource.Listeners.Add(new ConsoleTraceListener());
-            PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.All;
-            */
-
             Apps = new ObservableCollection<AppEntry>();
             this.DataContext = this;
 
@@ -68,19 +63,6 @@ namespace AdaptiveKeyboardConfig
                 p => appList.SelectedIndex >= 0);
 
             appList.SelectionChanged += (s, e) => RemoveApp.RaiseCanExecuteChanged();
-
-            findTargetWindowButton.PreviewMouseLeftButtonDown += findTargetWindowButton_MouseLeftButtonDown;
-            findTargetWindowButton.PreviewMouseMove += findTargetWindowButton_MouseMove;
-            findTargetWindowButton.PreviewMouseLeftButtonUp += findTargetWindowButton_MouseLeftButtonUp;
-
-            winGrabber = new WinGrabber();
-            winGrabber.Show();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            winGrabber.Close();
         }
 
         void addApp(AppEntry app)
@@ -99,8 +81,8 @@ namespace AdaptiveKeyboardConfig
             POINT pt;
             GetPhysicalCursorPos(out pt);
 
-            var hwndGrabber = (HwndSource)HwndSource.FromVisual(winGrabber);
-            var hwndSrc = (HwndSource)HwndSource.FromVisual(this);
+            var hwndGrabber = IntPtr.Zero;// ((HwndSource)HwndSource.FromVisual(winGrabber)).Handle;
+            var hwndSrc = ((HwndSource)HwndSource.FromVisual(this)).Handle;
 
             IntPtr hwndFound = IntPtr.Zero;
             EnumWindows((hwnd, lParam) =>
@@ -109,7 +91,7 @@ namespace AdaptiveKeyboardConfig
                 if (!GetWindowRect(hwnd, out rect) ||
                     !rect.Contains(pt) ||
                     !IsWindowVisible(hwnd) ||
-                    hwnd == hwndGrabber.Handle || hwnd == hwndSrc.Handle)
+                    hwnd == hwndGrabber || hwnd == hwndSrc)
                     return true; // continue search
 
                 hwndFound = hwnd;
@@ -155,61 +137,6 @@ namespace AdaptiveKeyboardConfig
             }
         }
 
-        void findTargetWindowButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = false;
-            var elem = sender as UIElement;
-            if (elem != null)
-                elem.CaptureMouse();
-            winGrabber.Visibility = System.Windows.Visibility.Hidden; // Without this, the first attempt to visualize the window failed...
-            findWindow();
-        }
-
-        void findTargetWindowButton_MouseMove(object sender, MouseEventArgs e)
-        {
-            e.Handled = false;
-            if (e.LeftButton != MouseButtonState.Pressed)
-            {
-                if (lastAppFound != null)
-                {
-                    lastAppFound = null;
-                    winGrabber.Visibility = System.Windows.Visibility.Hidden;
-                }
-                return;
-            }
-
-            findWindow();
-        }
-
-        bool findWindow()
-        {
-            RECT bounds;
-            lastAppFound = getAppFromCursorPos(out bounds);
-            if (lastAppFound == null)
-            {
-                winGrabber.Visibility = System.Windows.Visibility.Hidden;
-                return false;
-            }
-
-            winGrabber.Left = bounds.Left;
-            winGrabber.Top = bounds.Top;
-            winGrabber.Width = bounds.Width;
-            winGrabber.Height = bounds.Height;
-            winGrabber.winTitle.Text = lastAppFound.DisplayName;
-            winGrabber.Visibility = System.Windows.Visibility.Visible;
-            return true;
-        }
-
-        void findTargetWindowButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = false;
-            var elem = sender as UIElement;
-            if (elem != null)
-                elem.ReleaseMouseCapture();
-            winGrabber.Visibility = System.Windows.Visibility.Hidden;
-            addApp(lastAppFound);
-        }
-
         private void modeSwitchButtonClick(object sender, RoutedEventArgs e)
         {
             var app = ((Button)sender).DataContext as AppEntry;
@@ -224,8 +151,6 @@ namespace AdaptiveKeyboardConfig
 
         private AppEntry lastAppFound;
 
-        private WinGrabber winGrabber;
-
         [DllImport("User32.dll")]
         static extern bool GetPhysicalCursorPos(out POINT lpPoint);
 
@@ -236,6 +161,7 @@ namespace AdaptiveKeyboardConfig
 
         [DllImport("user32.dll")]
         static extern bool IsWindowVisible(IntPtr hwnd);
+
 
         /// <summary>
         /// Retrieves the handle to the ancestor of the specified window. 
