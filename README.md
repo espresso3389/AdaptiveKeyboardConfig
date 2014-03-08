@@ -24,3 +24,5 @@ Project Web Page
 Sorry, Japanese Only:
 
 http://espresso3389.hatenablog.com/entry/2014/03/09/053553
+
+![Screenshot](/web/screenshot.png)
