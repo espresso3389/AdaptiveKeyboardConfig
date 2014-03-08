@@ -24,6 +24,14 @@ namespace AdaptiveKeyboardConfig
         private string path;
         private Mode mode;
         private ImageSource icon;
+        private string regPath;
+
+        [Flags]
+        enum Changes
+        {
+            Value = 1,
+            Path = 2,
+        }
 
         /// <summary>
         /// Application Name (i.e. Window Caption)
@@ -31,12 +39,12 @@ namespace AdaptiveKeyboardConfig
         public string DisplayName
         {
             get { return displayName; }
-            set
+            private set
             {
                 if (displayName == value)
                     return;
                 displayName = value;
-                propChanged("IsBeingRemoved");
+                propChanged("IsBeingRemoved", Changes.Path);
             }
         }
 
@@ -46,12 +54,12 @@ namespace AdaptiveKeyboardConfig
         public string Path
         {
             get { return path; }
-            set
+            private set
             {
                 if (path == value)
                     return;
                 path = value;
-                propChanged("Path");
+                propChanged("Path", Changes.Value);
             }
         }
 
@@ -66,36 +74,69 @@ namespace AdaptiveKeyboardConfig
                 if (mode == value)
                     return;
                 mode = value;
-                propChanged("Mode");
+                propChanged("Mode", Changes.Path);
             }
         }
 
+        /// <summary>
+        /// The icon of the executable. If the icon is not loaded, the value is <c>null</c>.
+        /// To load the icon explicitly, call <see cref="LoadIconFromModule"/> method.
+        /// </summary>
         public ImageSource Icon
         {
             get { return icon; }
-            set
+            private set
             {
                 if (icon == value)
                     return;
                 icon = value;
-                propChanged("Icon");
+                propChanged("Icon", 0);
+            }
+        }
+
+        /// <summary>
+        /// The registry path, where the <see cref="AppEntry"/> is last loaded from.
+        /// </summary>
+        public string RegistryPath
+        {
+            get { return regPath; }
+            private set
+            {
+                if (regPath == value)
+                    return;
+                regPath = value;
+                propChanged("RegistryPath", 0);
             }
         }
 
         public bool IsBeingRemoved { get; private set; }
 
+        public bool SetupFinished { get; private set; }
+
         public void MarkForDeletion()
         {
             IsBeingRemoved = true;
-            propChanged("IsBeingRemoved");
+            propChanged("IsBeingRemoved", 0);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void propChanged(string propName)
+        private void propChanged(string propName, Changes changes)
         {
+            if (!SetupFinished)
+                return;
+
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
+
+            if (changes.HasFlag(Changes.Path))
+            {
+                UpdateRegistryEntry();
+            }
+            else if (changes.HasFlag(Changes.Value))
+            {
+                writeAppPath();
+            }
         }
 
         public void LoadIconFromModule(Visual visual, int size)
@@ -178,7 +219,9 @@ namespace AdaptiveKeyboardConfig
                             name = System.IO.Path.GetFileNameWithoutExtension(exeName);
                     }
 
-                    return new AppEntry() { DisplayName = name, Path = exeName };
+                    var app = new AppEntry() { DisplayName = name, Path = exeName };
+                    app.SetupFinished = true;
+                    return app;
                 }
             }
             catch (Exception e)
@@ -195,15 +238,21 @@ namespace AdaptiveKeyboardConfig
         /// <returns>List of the apps.</returns>
         public static IEnumerable<AppEntry> EnumAppsExcluding(IEnumerable<AppEntry> appsToIgnore)
         {
-            var ignore = new HashSet<AppEntry>(appsToIgnore, new CompareSelector<AppEntry, string>(a => a.Path));
+            var ignore = new HashSet<AppEntry>(appsToIgnore.Where(app => app != null), new CompareSelector<AppEntry, string>(app => app.Path));
 
             return EnumWindows()
                 .Where(hwnd => IsWindowVisible(hwnd))
                 .Select(hwnd => GetAncestor(hwnd, GetAncestorFlags.GetRootOwner))
                 .Select(AppEntry.FromHwnd)
+                .Where(app => app != null)
                 .Distinct(app => app.Path)
                 .Where(app => app != null && !ignore.Contains(app));
         }
+
+        /// <summary>
+        /// Registry root path for Adaptive Keyboard Entry
+        /// </summary>
+        private static readonly string RegistryRootPath = @"Software\Lenovo\SmartKey\Application\Row";
 
         /// <summary>
         /// Load all the applications from the registry entries.
@@ -211,7 +260,7 @@ namespace AdaptiveKeyboardConfig
         /// <returns>List of the apps.</returns>
         public static IEnumerable<AppEntry> LoadAppsFromRegistry(Visual visual, int iconSize)
         {
-            using (var reg = Registry.CurrentUser.CreateSubKey(@"Software\Lenovo\SmartKey\Application\Row"))
+            using (var reg = Registry.CurrentUser.CreateSubKey(RegistryRootPath))
             {
                 foreach (Mode mode in Enum.GetValues(typeof (Mode)))
                 {
@@ -225,15 +274,47 @@ namespace AdaptiveKeyboardConfig
                                 {
                                     DisplayName = appName,
                                     Mode = mode,
-                                    Path = appReg.GetValue("AppPath") as string
+                                    Path = appReg.GetValue("AppPath") as string,
+                                    RegistryPath = string.Format(@"{0}\{1}\{2}", RegistryRootPath, mode, appName)
                                 };
                                 app.LoadIconFromModule(visual, iconSize);
+                                app.SetupFinished = true;
                                 yield return app;
                             }
                         }
                     }
                 }
             }    
+        }
+
+        public void RemoveRegistryEntry()
+        {
+            if (!string.IsNullOrEmpty(RegistryPath))
+            {
+                // Remove the current entry anyway
+                var regPath = System.IO.Path.GetDirectoryName(RegistryPath);
+                var key = System.IO.Path.GetFileName(RegistryPath);
+
+                using (var reg = Registry.CurrentUser.CreateSubKey(regPath))
+                    reg.DeleteSubKeyTree(key);
+
+                RegistryPath = null;
+            }
+        }
+
+        private void writeAppPath()
+        {
+            var newRegPath = string.Format(@"{0}\{1}\{2}", RegistryRootPath, Mode, DisplayName);
+            using (var reg = Registry.CurrentUser.CreateSubKey(newRegPath))
+                reg.SetValue("AppPath", Path);
+
+            RegistryPath = newRegPath;
+        }
+
+        public void UpdateRegistryEntry()
+        {
+            RemoveRegistryEntry();
+            writeAppPath();
         }
 
         [DllImport("user32.dll")]

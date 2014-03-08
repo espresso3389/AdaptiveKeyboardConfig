@@ -44,7 +44,10 @@ namespace AdaptiveKeyboardConfig
             await Task.Delay(200);
 
             foreach (var item in appsToRemove)
+            {
+                item.RemoveRegistryEntry();
                 Apps.Remove(item);
+            }
 
             if (idx >= appList.Items.Count)
                 idx = appList.Items.Count - 1;
@@ -77,6 +80,7 @@ namespace AdaptiveKeyboardConfig
                 return;
             Apps.Insert(0, app);
             appList.ScrollIntoView(app);
+            app.UpdateRegistryEntry();
         }
 
         private void modeSwitchButtonClick(object sender, RoutedEventArgs e)
