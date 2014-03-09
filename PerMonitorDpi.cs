@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -10,6 +11,9 @@ namespace PerMonitorDpi
     {
         public PerMonitorDpiHelper(Window window)
         {
+            Debug.WriteLine(
+                string.Format("Process DPI Awareness: {0}", NativeMethods.GetProcessDpiAwareness(IntPtr.Zero)));
+
             this.window = window;
             this.systemDpi = window.GetSystemDpi();
             this.hwndSource = PresentationSource.FromVisual(window) as HwndSource;
@@ -57,6 +61,9 @@ namespace PerMonitorDpi
 
             this.window.Width = this.window.Width * dpi.X / this.currentDpi.X;
             this.window.Height = this.window.Height * dpi.Y / this.currentDpi.Y;
+
+            Debug.WriteLine(string.Format("DPI Change: {0} -> {1} (System: {2})",
+                this.currentDpi, dpi, this.systemDpi));
 
             this.currentDpi = dpi;
         }
@@ -151,6 +158,11 @@ namespace PerMonitorDpi
                 return ((int)this.X * 397) ^ (int)this.Y;
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("[X={0},Y={1}]", X, Y);
+        }
     }
 
     /// <summary>
@@ -187,8 +199,19 @@ namespace PerMonitorDpi
         [DllImport("user32.dll")]
         public static extern IntPtr MonitorFromWindow(IntPtr hwnd, MonitorDefaultTo dwFlags);
 
-        [DllImport("SHCore.dll")]
+        [DllImport("shcore.dll")]
         public static extern void GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, ref uint dpiX, ref uint dpiY);
+
+        [DllImport("shcore.dll")]
+        private static extern int GetProcessDpiAwareness(IntPtr handle, ref ProcessDpiAwareness awareness);
+
+        public static ProcessDpiAwareness GetProcessDpiAwareness(IntPtr handle)
+        {
+            ProcessDpiAwareness pda = ProcessDpiAwareness.Unaware;
+            if (GetProcessDpiAwareness(handle, ref pda) == 0)
+                return pda;
+            return ProcessDpiAwareness.Unaware;
+        }
 
         public enum MonitorDefaultTo
         {
@@ -200,6 +223,13 @@ namespace PerMonitorDpi
         public enum WindowMessage
         {
             WM_DPICHANGED = 0x02E0,
+        }
+
+        public enum ProcessDpiAwareness
+        {
+          Unaware = 0,
+          SystemDpiAware = 1,
+          PerMonitorDpiAware = 2
         }
     }
 

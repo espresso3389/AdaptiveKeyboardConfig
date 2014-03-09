@@ -1,4 +1,7 @@
-﻿using Microsoft.Practices.Prism;
+﻿using System.Windows.Data;
+using System.Windows.Media;
+using MahApps.Metro.Controls;
+using Microsoft.Practices.Prism;
 using Microsoft.Practices.Prism.Commands;
 using System;
 using System.Collections.ObjectModel;
@@ -13,7 +16,7 @@ namespace AdaptiveKeyboardConfig
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : MetroWindow
     {
         public MainWindow()
         {
@@ -21,9 +24,6 @@ namespace AdaptiveKeyboardConfig
 
             InitializeComponent();
             this.DataContext = this;
-
-            perMonitorDpi = new PerMonitorDpiHelper(this);
-            this.LayoutTransform = perMonitorDpi.DpiScaleTransform;
 
             AddApp = new DelegateCommand<string>(showAvailableAppsContextMenu);
             RemoveApp = new DelegateCommand<string>(removeApps, p => appList.SelectedIndex >= 0);
@@ -34,6 +34,21 @@ namespace AdaptiveKeyboardConfig
             };
 
             appList.SelectionChanged += (s, e) => RemoveApp.RaiseCanExecuteChanged();
+
+            this.Loaded += (s, e) =>
+            {
+                var elem = this.Content as FrameworkElement;
+                if (elem != null)
+                {
+                    PerMonitorDpi = new PerMonitorDpiHelper(this);
+                    var binding = new Binding()
+                    {
+                        Source = PerMonitorDpi,
+                        Path = new PropertyPath(PerMonitorDpiHelper.DpiScaleTransformProperty)
+                    };
+                    elem.SetBinding(LayoutTransformProperty, binding);
+                }
+            };
         }
 
         async void removeApps(string p)
@@ -96,7 +111,7 @@ namespace AdaptiveKeyboardConfig
             app.Mode = (Mode)(((int)app.Mode + 1) % Enum.GetNames(typeof(Mode)).Length);
         }
 
-        private PerMonitorDpiHelper perMonitorDpi;
+        public PerMonitorDpiHelper PerMonitorDpi;
         public ObservableCollection<AppEntry> Apps { get; set; }
         public DelegateCommand<string> AddApp { get; set; }
         public DelegateCommand<string> RemoveApp { get; set; }
