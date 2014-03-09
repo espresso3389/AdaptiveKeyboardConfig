@@ -194,7 +194,10 @@ namespace AdaptiveKeyboardConfig
         /// <returns>The <see cref="AppEntry"/> of the specified <see cref="Visual"/>.</returns>
         public static AppEntry FromVisual(Visual visual)
         {
-            return FromHwnd(((HwndSource)PresentationSource.FromVisual(visual)).Handle);
+            var hwndSource = PresentationSource.FromVisual(visual) as HwndSource;
+            if (hwndSource == null)
+                return null;
+            return FromHwnd(hwndSource.Handle);
         }
 
         /// <summary>
