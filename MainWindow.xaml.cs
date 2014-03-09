@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using PerMonitorDpi;
 
 namespace AdaptiveKeyboardConfig
 {
@@ -20,6 +21,9 @@ namespace AdaptiveKeyboardConfig
 
             InitializeComponent();
             this.DataContext = this;
+
+            perMonitorDpi = new PerMonitorDpiHelper(this);
+            this.LayoutTransform = perMonitorDpi.DpiScaleTransform;
 
             AddApp = new DelegateCommand<string>(showAvailableAppsContextMenu);
             RemoveApp = new DelegateCommand<string>(removeApps, p => appList.SelectedIndex >= 0);
@@ -92,6 +96,7 @@ namespace AdaptiveKeyboardConfig
             app.Mode = (Mode)(((int)app.Mode + 1) % Enum.GetNames(typeof(Mode)).Length);
         }
 
+        private PerMonitorDpiHelper perMonitorDpi;
         public ObservableCollection<AppEntry> Apps { get; set; }
         public DelegateCommand<string> AddApp { get; set; }
         public DelegateCommand<string> RemoveApp { get; set; }
