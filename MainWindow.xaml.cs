@@ -37,17 +37,8 @@ namespace AdaptiveKeyboardConfig
 
             this.Loaded += (s, e) =>
             {
-                var elem = this.Content as FrameworkElement;
-                if (elem != null)
-                {
-                    PerMonitorDpi = new PerMonitorDpiHelper(this);
-                    var binding = new Binding()
-                    {
-                        Source = PerMonitorDpi,
-                        Path = new PropertyPath(PerMonitorDpiHelper.DpiScaleTransformProperty)
-                    };
-                    elem.SetBinding(LayoutTransformProperty, binding);
-                }
+                PerMonitorDpi = new PerMonitorDpiHelper(this);
+                PerMonitorDpi.BindLayoutTransformTo(this.Content as FrameworkElement);
             };
         }
 

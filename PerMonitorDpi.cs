@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -49,6 +50,24 @@ namespace PerMonitorDpi
             }
 
             return IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Bind <see cref="DpiScaleTransform"/> to the specified <see cref="FrameworkElement"/> object's <see cref="FrameworkElement.LayoutTransformProperty"/>.
+        /// </summary>
+        /// <param name="element">
+        /// The element which uses the <see cref="DpiScaleTransform"/> as its <see cref="FrameworkElement.LayoutTransform"/>.
+        /// If the parameter is <c>null</c>, the method does nothing and return immediately.
+        /// </param>
+        public void BindLayoutTransformTo(FrameworkElement element)
+        {
+            if (element == null)
+                return;
+            element.SetBinding(FrameworkElement.LayoutTransformProperty, new Binding()
+            {
+                Source = this,
+                Path = new PropertyPath(DpiScaleTransformProperty)
+            });
         }
 
         private void ChangeDpi(Dpi dpi)
