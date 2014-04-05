@@ -13,6 +13,12 @@ Requirements
 * Windows 7 or later
 * [.NET Framework 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653) or later. (Normally ThinkPad X1 Carbon already has it)
 
+Download
+----
+You can download the binary package from the following URL:
+
+https://dl.dropboxusercontent.com/u/150906/akc-20140310.zip
+
 License
 ----
 
