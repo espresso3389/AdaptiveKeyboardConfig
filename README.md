@@ -27,7 +27,7 @@ The code is licensed under Apache License 2.0.
 Project Web Page
 ----
 
-Sorry, Japanese Only:
+Currently, all contents are in Japanese; no translations...
 
 http://espresso3389.hatenablog.com/entry/2014/03/09/053553
 
