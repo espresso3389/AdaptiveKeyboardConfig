@@ -17,7 +17,7 @@ Download
 ----
 You can download the binary package from the following URL:
 
-https://dl.dropboxusercontent.com/u/150906/akc-20140310.zip
+https://dl.dropboxusercontent.com/u/150906/akc-20140725.zip
 
 License
 ----
@@ -32,3 +32,8 @@ Currently, all contents are in Japanese; no translations...
 http://espresso3389.hatenablog.com/entry/2014/03/09/053553
 
 ![Screenshot](/web/screenshot.png)
+
+History
+----
+2014-03-10  Fixes on High-DPI issues
+2014-03-09  First Release
