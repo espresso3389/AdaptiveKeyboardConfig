@@ -35,5 +35,12 @@ http://espresso3389.hatenablog.com/entry/2014/03/09/053553
 
 History
 ----
-2014-03-10  Fixes on High-DPI issues
-2014-03-09  First Release
+* 2014-07-25
+Update to get along with new Hotkey Features Integration 5.14.0000 (guvu33ww) relased on 22 Jul 2014
+http://support.lenovo.com/en_US/downloads/detail.page?DocID=DS029026
+
+* 2014-03-10
+Fixes on High-DPI issues
+
+* 2014-03-09
+First Release
