@@ -290,11 +290,14 @@ namespace AdaptiveKeyboardConfig
                         {
                             using (var appReg = modeReg.CreateSubKey(appName))
                             {
+                                var appPath = appReg.GetValue("AppPath") as string;
+                                if (appPath == null)
+                                    continue;
                                 var app = new AppEntry()
                                 {
                                     DisplayName = appName,
                                     Mode = mode,
-                                    Path = appReg.GetValue("AppPath") as string,
+                                    Path = appPath,
                                     RegistryPath = string.Format(@"{0}\{1}\{2}", RegistryRootPath, mode, appName)
                                 };
                                 app.LoadIconFromModule(visual, iconSize);
